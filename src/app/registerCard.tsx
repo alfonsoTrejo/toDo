@@ -56,9 +56,10 @@ export default function Home({ onButtonClick }) {
   };
 
   const handleRegister = async () => {
+    console.log("Email:", email, "Password:", password);
     setLoading(true); // Inicia la carga
     try {
-      const response = await fetch(`${API_URL}/auth/singUp`, { // Asegúrate que el endpoint es correcto
+      const response = await fetch(`http://10.21.41.238:5000/auth/singUp`, { // Asegúrate que el endpoint es correcto
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ export default function Home({ onButtonClick }) {
   const handleLogin = async () => {
     setLoading(true); // Inicia la carga
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`http://10.21.41.238:5000/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -152,13 +153,13 @@ export default function Home({ onButtonClick }) {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="name">Nombre</Label>
+                  <Label htmlFor="email">Nombre</Label>
                   <Texto 
-                    type="text" 
-                    id="name" 
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)} 
-                    placeholder="Nombre de usuario"
+                    type="email" 
+                    id="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)} 
+                    placeholder="Correo"
                   />
                 </div>
 
@@ -242,7 +243,7 @@ export default function Home({ onButtonClick }) {
           <CardFooter className="flex justify-center">
             {isLogin ? (
               <Button 
-                disabled={!username || !password || loading} 
+                disabled={!email || !password || loading} 
                 onClick={handleLogin}
               >
                 {loading ? "Cargando..." : "Iniciar sesión"}
