@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import * as React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -24,11 +24,12 @@ export default function Home({ onButtonClick }) {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); 
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false); // Estado de carga
 
-  const emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+  const emailRegex =
+    /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
 
   const handleToggleForm = () => {
     setIsLogin(!isLogin);
@@ -36,8 +37,8 @@ export default function Home({ onButtonClick }) {
     setPassword("");
     setConfirmPassword("");
     setEmail("");
-    setSuccessMessage(""); 
-    setErrorMessage(""); 
+    setSuccessMessage("");
+    setErrorMessage("");
   };
 
   const isFormValid = () => {
@@ -59,10 +60,11 @@ export default function Home({ onButtonClick }) {
     console.log("Email:", email, "Password:", password);
     setLoading(true); // Inicia la carga
     try {
-      const response = await fetch(`http://10.21.41.238:5000/auth/singUp`, { // Asegúrate que el endpoint es correcto
-        method: 'POST',
+      const response = await fetch(`http://192.168.1.71:5000/auth/singUp`, {
+        // Asegúrate que el endpoint es correcto
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username, // Asegúrate de enviar el nombre de usuario si es necesario
@@ -75,10 +77,12 @@ export default function Home({ onButtonClick }) {
         setSuccessMessage("Usuario registrado correctamente.");
         setTimeout(() => {
           handleToggleForm();
-          setIsLogin(true); 
+          setIsLogin(true);
         }, 2000);
       } else {
-        setErrorMessage(data.Error || data.message || "Error al registrar usuario.");
+        setErrorMessage(
+          data.Error || data.message || "Error al registrar usuario."
+        );
       }
     } catch (error) {
       setErrorMessage("Error en el servidor. Por favor intenta más tarde.");
@@ -91,10 +95,10 @@ export default function Home({ onButtonClick }) {
   const handleLogin = async () => {
     setLoading(true); // Inicia la carga
     try {
-      const response = await fetch(`http://10.21.41.238:5000/auth/login`, {
-        method: 'POST',
+      const response = await fetch(`http://192.168.1.71:5000/auth/login`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email,
@@ -104,8 +108,11 @@ export default function Home({ onButtonClick }) {
       const data = await response.json();
       if (response.ok) {
         setSuccessMessage("Inicio de sesión exitoso.");
+        onButtonClick();
       } else {
-        setErrorMessage(data.Error || data.message || "Error al iniciar sesión.");
+        setErrorMessage(
+          data.Error || data.message || "Error al iniciar sesión."
+        );
       }
     } catch (error) {
       setErrorMessage("Error en el servidor. Por favor intenta más tarde.");
@@ -120,11 +127,13 @@ export default function Home({ onButtonClick }) {
       <h1 className="text-4xl font-bold text-center text-white pt-5">
         Bienvenido a DecadencyChat
       </h1>
-      
+
       <div className="flex justify-center">
         <StyledCard className="w-[350px] mt-6">
           <CardHeader>
-            <CardTitle>{isLogin ? "Inicio de sesión" : "Crear cuenta"}</CardTitle>
+            <CardTitle>
+              {isLogin ? "Inicio de sesión" : "Crear cuenta"}
+            </CardTitle>
             <CardDescription>
               {isLogin
                 ? "Ingresa los datos para iniciar sesión"
@@ -153,32 +162,37 @@ export default function Home({ onButtonClick }) {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="email">Nombre</Label>
-                  <Texto 
-                    type="email" 
-                    id="email" 
+                  <Label htmlFor="Email">Ingresa tu email</Label>
+                  <Texto
+                    type="email"
+                    id="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)} 
-                    placeholder="Correo"
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Ingresa tu email"
                   />
                 </div>
 
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="pass">Contraseña</Label>
                   <div className="relative">
-                    <Texto 
-                      type={showPassword ? "text" : "password"} 
-                      id="pass" 
+                    <Texto
+                      type={showPassword ? "text" : "password"}
+                      id="pass"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)} 
-                      placeholder={isLogin ? "Contraseña" : "Crea una contraseña"}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder={
+                        isLogin ? "Contraseña" : "Crea una contraseña"
+                      }
                     />
-                    <button 
+                    <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)} 
+                      onClick={() => setShowPassword(!showPassword)}
                       className="toggle-password"
                     >
-                      <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} size="lg" />
+                      <FontAwesomeIcon
+                        icon={showPassword ? faEye : faEyeSlash}
+                        size="lg"
+                      />
                     </button>
                   </div>
                 </div>
@@ -188,23 +202,24 @@ export default function Home({ onButtonClick }) {
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="confirmPass">Confirmar Contraseña</Label>
                       <div className="relative">
-                        <Texto 
-                          type={showPassword ? "text" : "password"} 
-                          id="confirmPass" 
+                        <Texto
+                          type={showPassword ? "text" : "password"}
+                          id="confirmPass"
                           value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)} 
+                          onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder="Confirma tu contraseña"
                         />
                       </div>
                     </div>
+
                     <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="Email">Ingresa tu email</Label>
-                      <Texto 
-                        type="email" 
-                        id="email" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)} 
-                        placeholder="Ingresa tu email"
+                      <Label htmlFor="name">Nombre</Label>
+                      <Texto
+                        type="text"
+                        id="name"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Nombre de usuario"
                       />
                     </div>
 
@@ -220,7 +235,9 @@ export default function Home({ onButtonClick }) {
                             checked={userType === "alumno"}
                             onChange={() => setUserType("alumno")}
                           />
-                          <Label htmlFor="alumno" className="ml-2">Alumno</Label>
+                          <Label htmlFor="alumno" className="ml-2">
+                            Alumno
+                          </Label>
                         </div>
                         <div>
                           <input
@@ -231,7 +248,9 @@ export default function Home({ onButtonClick }) {
                             checked={userType === "maestro"}
                             onChange={() => setUserType("maestro")}
                           />
-                          <Label htmlFor="maestro" className="ml-2">Maestro</Label>
+                          <Label htmlFor="maestro" className="ml-2">
+                            Maestro
+                          </Label>
                         </div>
                       </div>
                     </div>
@@ -242,16 +261,16 @@ export default function Home({ onButtonClick }) {
           </CardContent>
           <CardFooter className="flex justify-center">
             {isLogin ? (
-              <Button 
-                disabled={!email || !password || loading} 
+              <Button
+                disabled={!email || !password || loading}
                 onClick={handleLogin}
               >
                 {loading ? "Cargando..." : "Iniciar sesión"}
               </Button>
             ) : (
-              <Button 
-                disabled={!isFormValid() || loading} 
-                onClick={handleRegister} 
+              <Button
+                disabled={!isFormValid() || loading}
+                onClick={handleRegister}
               >
                 {loading ? "Cargando..." : "Crear cuenta"}
               </Button>
@@ -276,7 +295,7 @@ const StyledCard = styled.div`
   background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     left: -5px;
@@ -305,9 +324,8 @@ const StyledCard = styled.div`
   }
 
   &:hover::before {
-    transform: rotate(-180deg) scaleX(1.0) scaleY(1.0);
+    transform: rotate(-180deg) scaleX(1) scaleY(1);
   }
-      
 
   .toggle-password {
     position: absolute;
