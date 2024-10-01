@@ -16,6 +16,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Home({ onButtonClick }) {
+  const API_URL = "http://10.21.41.238:5000"; // URL de tu servidor
   const [isLogin, setIsLogin] = useState(true);
   const [userType, setUserType] = useState("alumno");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +25,8 @@ export default function Home({ onButtonClick }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [loading, setLoading] = useState(false); // Estado de carga
 
   const emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
 
@@ -34,6 +37,7 @@ export default function Home({ onButtonClick }) {
     setConfirmPassword("");
     setEmail("");
     setSuccessMessage(""); 
+    setErrorMessage(""); 
   };
 
   const isFormValid = () => {
@@ -51,12 +55,63 @@ export default function Home({ onButtonClick }) {
     }
   };
 
-  const handleRegister = () => {
-    setSuccessMessage("Usuario registrado correctamente.");
-    setTimeout(() => {
-      handleToggleForm();
-      setIsLogin(true); 
-    }, 2000);
+  const handleRegister = async () => {
+    setLoading(true); // Inicia la carga
+    try {
+      const response = await fetch(`${API_URL}/auth/singUp`, { // Asegúrate que el endpoint es correcto
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username, // Asegúrate de enviar el nombre de usuario si es necesario
+          email,
+          password,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setSuccessMessage("Usuario registrado correctamente.");
+        setTimeout(() => {
+          handleToggleForm();
+          setIsLogin(true); 
+        }, 2000);
+      } else {
+        setErrorMessage(data.Error || data.message || "Error al registrar usuario.");
+      }
+    } catch (error) {
+      setErrorMessage("Error en el servidor. Por favor intenta más tarde.");
+      console.error("Error en el servidor:", error);
+    } finally {
+      setLoading(false); // Finaliza la carga
+    }
+  };
+
+  const handleLogin = async () => {
+    setLoading(true); // Inicia la carga
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setSuccessMessage("Inicio de sesión exitoso.");
+      } else {
+        setErrorMessage(data.Error || data.message || "Error al iniciar sesión.");
+      }
+    } catch (error) {
+      setErrorMessage("Error en el servidor. Por favor intenta más tarde.");
+      console.error("Error en el servidor:", error);
+    } finally {
+      setLoading(false); // Finaliza la carga
+    }
   };
 
   return (
@@ -87,6 +142,11 @@ export default function Home({ onButtonClick }) {
             {successMessage && (
               <div className="bg-green-200 text-green-800 p-2 rounded mb-4 text-center">
                 {successMessage}
+              </div>
+            )}
+            {errorMessage && (
+              <div className="bg-red-200 text-red-800 p-2 rounded mb-4 text-center">
+                {errorMessage}
               </div>
             )}
             <form>
@@ -182,17 +242,17 @@ export default function Home({ onButtonClick }) {
           <CardFooter className="flex justify-center">
             {isLogin ? (
               <Button 
-                disabled={!username || !password} 
-                onClick={onButtonClick}
+                disabled={!username || !password || loading} 
+                onClick={handleLogin}
               >
-                Iniciar sesión
+                {loading ? "Cargando..." : "Iniciar sesión"}
               </Button>
             ) : (
               <Button 
-                disabled={!isFormValid()} 
+                disabled={!isFormValid() || loading} 
                 onClick={handleRegister} 
               >
-                Crear cuenta
+                {loading ? "Cargando..." : "Crear cuenta"}
               </Button>
             )}
           </CardFooter>
@@ -201,10 +261,9 @@ export default function Home({ onButtonClick }) {
     </div>
   );
 }
-
 const StyledCard = styled.div`
   position: relative;
-  max-width: 110%; 
+  max-width: 110%; /* Evita que la tarjeta sea más grande que su contenedor */
   background-color: #000;
   display: flex;
   flex-direction: column;
@@ -213,7 +272,7 @@ const StyledCard = styled.div`
   gap: 12px;
   border-radius: 8px;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.8); 
+  background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
 
   &::before {
     content: '';
@@ -221,8 +280,8 @@ const StyledCard = styled.div`
     inset: 0;
     left: -5px;
     margin: auto;
-    width: calc(100% + 10px); 
-    height: calc(100% + 10px); 
+    width: calc(100% + 10px); /* Ajusta dinámicamente al ancho */
+    height: calc(100% + 10px); /* El alto se ajusta dinámicamente */
     border-radius: 10px;
     background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
     z-index: -10;
