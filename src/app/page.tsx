@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LeftSheet from "@/components/ui/leftSheet";
 import MidArea from "@/components/ui/midArea";
 import Respuestas from "@/components/ui/Respuestas";
@@ -11,6 +11,12 @@ export default function Page() {
   const handleResponse = (data) => {
     // Lógica para manejar la respuesta (puedes personalizarla)
   };
+  useEffect(() => { 
+    const jwt = localStorage.getItem("JWT"); // Cambia "jwtToken" al nombre de tu clave
+    if (jwt) {
+      setShowHome(false); // Si el JWT está presente, oculta la pantalla de inicio
+    }
+  }, []); // Solo se ejecuta una vez al montar el componente
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 p-3">
