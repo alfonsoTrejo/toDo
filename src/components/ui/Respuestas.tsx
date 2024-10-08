@@ -16,7 +16,7 @@ export default function Respuestas({ response }) {
       </div>
       
       <div>
-      {response && response.Respuesta_Geminai ? (
+      {response && response.Audio_URL ? (
           <div className="p-4 bg-white rounded-lg shadow-md w-full mt-4">
             <audio controls autoplay className="w-full">
             <source src={response.Audio_URL} type="audio/mpeg" />

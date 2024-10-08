@@ -7,9 +7,10 @@ import Home from "./registerCard"; // Tu componente de inicio de sesión
 
 export default function Page() {
   const [showHome, setShowHome] = useState(true); // Controla si se muestra la pantalla de inicio
+  const [response, setResponse] = useState(null); // Estado para almacenar la respuesta
 
   const handleResponse = (data) => {
-    // Lógica para manejar la respuesta (puedes personalizarla)
+    setResponse(data);// Lógica para manejar la respuesta (puedes personalizarla)
   };
   useEffect(() => { 
     const jwt = localStorage.getItem("JWT"); // Cambia "jwtToken" al nombre de tu clave
@@ -33,7 +34,7 @@ export default function Page() {
           <LeftSheet />
         </div>
         <div className="flex w-full ml-6 p-1">
-          <Respuestas response={null} />
+          <Respuestas response={response} />
         </div>
       </div>
 

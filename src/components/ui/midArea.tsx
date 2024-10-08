@@ -8,10 +8,13 @@ export default function midArea({ onResponse }) {
 
   // Función para manejar el clic en el botón
   const handleClick = async () => {
+    const JWT = localStorage.getItem("JWT"); // Cambia "JWT" por el nombre que usaste para almacenarlo
+
     try {
-      const response = await fetch("http://127.0.0.1:5000/texto", {
+      const response = await fetch("http://10.21.31.131:5000/texto", {
         method: "POST",
         headers: {
+          "Authorization":`Bearer ${JWT}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ text }), // Enviar el texto en formato JSON
