@@ -11,7 +11,7 @@ export default function midArea({ onResponse }) {
     const JWT = localStorage.getItem("JWT"); // Cambia "JWT" por el nombre que usaste para almacenarlo
 
     try {
-      const response = await fetch("http://10.21.31.131:5000/texto", {
+      const response = await fetch(`http://127.0.0.1:5000/texto`, {
         method: "POST",
         headers: {
           "Authorization":`Bearer ${JWT}`,

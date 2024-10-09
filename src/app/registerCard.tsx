@@ -60,7 +60,7 @@ export default function Home({ onButtonClick }) {
     console.log("Email:", email, "Password:", password);
     setLoading(true); // Inicia la carga
     try {
-      const response = await fetch(`http://10.21.31.131:5000/auth/singUp`, {
+      const response = await fetch(`http://127.0.0.1:5000/auth/singUp`, {
         // Asegúrate que el endpoint es correcto
         method: "POST",
         headers: {
@@ -95,7 +95,7 @@ export default function Home({ onButtonClick }) {
   const handleLogin = async () => {
     setLoading(true); // Inicia la carga
     try {
-      const response = await fetch(`http://10.21.31.131:5000/auth/login`, {
+      const response = await fetch(`http://127.0.0.1:5000/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
