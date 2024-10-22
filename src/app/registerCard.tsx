@@ -16,7 +16,6 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Home({ onButtonClick }) {
-  const API_URL = "http://10.21.41.238:5000"; // URL de tu servidor
   const [isLogin, setIsLogin] = useState(true);
   const [userType, setUserType] = useState("alumno");
   const [showPassword, setShowPassword] = useState(false);
@@ -125,6 +124,7 @@ export default function Home({ onButtonClick }) {
 
   return (
     <div>
+      {}
       <h1 className="text-4xl font-bold text-center text-white pt-5">
         Bienvenido a DecadencyChat
       </h1>
