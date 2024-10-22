@@ -68,19 +68,19 @@ export default function LeftSheet() {
         
         {error && <p className="text-red-500">{error}</p>}
         
-        <div className="mt-4">
+        <div className="mt-4 min-h-[200px] max-h-[80vh] overflow-y-auto"> {/* Establece una altura mínima y máxima */}
           {historial.length > 0 ? (
             <ul>
               {historial.map((mensaje) => (
                 <li key={mensaje.id} className="mb-2">
-                  <p className="text-sm"><strong>Texto:</strong> {truncateText(mensaje.message_text, 50)}</p> {/* Truncar el texto a 50 caracteres */}
+                  <p className="text-sm"><strong>Texto:</strong> {truncateText(mensaje.message_text, 50)}</p>
                   {mensaje.audio_link && (
                     <audio controls className="w-full">
                       <source src={mensaje.audio_link} type="audio/mpeg" />
                       El navegador no soporta este audio.
                     </audio>
                   )}
-                  <p className="text-xs"><small>Tiempo: {mensaje.message_time}</small></p> {/* Hacer el tiempo más pequeño */}
+                  <p className="text-xs"><small>Tiempo: {mensaje.message_time}</small></p>
                 </li>
               ))}
             </ul>
