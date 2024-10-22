@@ -6,10 +6,10 @@ import { toast } from "react-toastify"; // Importa toast
 
 export default function MidArea({ onResponse }) {
   const [text, setText] = useState(""); // Estado para gestionar el texto del Textarea
+  const [loading, setLoading] = useState(false); // Estado para gestionar el estado de carga
 
   // Función para manejar el clic en el botón
   const formatDate = (dateString) => {
-    // Suponiendo que el formato que estás recibiendo es 'YYYYMMDD-HHmmss'
     const year = dateString.slice(0, 4);
     const month = dateString.slice(4, 6);
     const day = dateString.slice(6, 8);
@@ -23,6 +23,7 @@ export default function MidArea({ onResponse }) {
   
   const handleClick = async () => {
     const JWT = localStorage.getItem("JWT");
+    setLoading(true); // Activar el estado de carga
   
     try {
       const response = await fetch(`http://127.0.0.1:5000/texto`, {
@@ -54,9 +55,10 @@ export default function MidArea({ onResponse }) {
         console.error("Error desconocido", error);
         toast.error("Error desconocido");
       }
+    } finally {
+      setLoading(false); // Desactivar el estado de carga al final de la operación
     }
   };
-  
   
   return (
     <div className="grid w-full h-full gap-7">
@@ -68,7 +70,9 @@ export default function MidArea({ onResponse }) {
         />
       </div>
       <div className="mx-auto shadow-md rounded-lg">
-        <Button onClick={handleClick}>Enviar tu ensayo</Button>
+        <Button onClick={handleClick} disabled={loading}>
+          {loading ? "Cargando..." : "Enviar tu ensayo"} {/* Cambiar el texto del botón */}
+        </Button>
       </div>
     </div>
   );
