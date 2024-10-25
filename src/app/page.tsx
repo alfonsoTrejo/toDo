@@ -4,7 +4,7 @@ import LeftSheet from "@/components/ui/leftSheet";
 import MidArea from "@/components/ui/midArea";
 import Respuestas from "@/components/ui/Respuestas";
 import Cerrar from "@/components/ui/cerrar";
-
+import File from "@/components/ui/files";
 import Home from "./registerCard"; // Tu componente de inicio de sesión
 import Spinner from "./spinner"; // Asegúrate de que la ruta sea correcta
 import { ToastContainer } from "react-toastify"; // Importa ToastContainer
@@ -57,12 +57,25 @@ export default function Page() {
           <div className={`flex flex-row w-full mt-auto p-3 ${showHome ? "hidden" : "block"}`}>
             <MidArea onResponse={handleResponse} />
           </div>
-          <div className={`flex flex-row w-full mt-auto p-3 ${showHome ? "hidden" : "block"}`}>
-          <Cerrar/>
+
+          {/* Sección para Cerrar y File, usando justify-between */}
+          <div className={`flex flex-row w-full mt-auto p-3 justify-between ${showHome ? "hidden" : "flex"}`}>
+            <Cerrar />
+            <File />
           </div>
           
           {/* Agrega el ToastContainer aquí */}
-          <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick={true} rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={true}
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable
+            pauseOnHover
+          />
         </>
       )}
     </div>

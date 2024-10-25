@@ -2,25 +2,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "react-toastify"; // Importa toast
+import { toast } from "react-toastify";
+import Spinner from "@/app/spinner"; // Asegúrate de importar tu Spinner
 
 export default function MidArea({ onResponse }) {
   const [text, setText] = useState(""); // Estado para gestionar el texto del Textarea
   const [loading, setLoading] = useState(false); // Estado para gestionar el estado de carga
 
-  // Función para manejar el clic en el botón
-  const formatDate = (dateString) => {
-    const year = dateString.slice(0, 4);
-    const month = dateString.slice(4, 6);
-    const day = dateString.slice(6, 8);
-    const hour = dateString.slice(9, 11);
-    const minute = dateString.slice(11, 13);
-    const second = dateString.slice(13, 15);
-  
-    // Formato adecuado para PostgreSQL o un formato compatible ISO
-    return `${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
-  };
-  
   const handleClick = async () => {
     const JWT = localStorage.getItem("JWT");
     setLoading(true); // Activar el estado de carga
@@ -47,7 +35,6 @@ export default function MidArea({ onResponse }) {
         toast.error(`Error: ${errorMessage || response.statusText}`);
       }
     } catch (error) {
-      // Verificar si el error es una instancia de Error
       if (error instanceof Error) {
         console.error("Error al enviar el texto:", error.message);
         toast.error(`Error: ${error.message}`);
@@ -57,6 +44,7 @@ export default function MidArea({ onResponse }) {
       }
     } finally {
       setLoading(false); // Desactivar el estado de carga al final de la operación
+      setText("");
     }
   };
   
@@ -70,9 +58,14 @@ export default function MidArea({ onResponse }) {
         />
       </div>
       <div className="mx-auto shadow-md rounded-lg">
-        <Button onClick={handleClick} disabled={loading}>
-          {loading ? "Cargando..." : "Enviar tu ensayo"} {/* Cambiar el texto del botón */}
-        </Button>
+        {/* Mostrar Spinner si está cargando, caso contrario, mostrar el botón */}
+        {loading ? (
+          <Spinner /> // Mostrar el spinner si está cargando
+        ) : (
+          <Button onClick={handleClick} disabled={loading}>
+            Enviar tu ensayo
+          </Button>
+        )}
       </div>
     </div>
   );

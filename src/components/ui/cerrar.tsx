@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button"; // Importa el componente de Button de Shadcn
+import React from "react";
+import Logout from "@/components/ui/logout"; // Asegúrate de que la ruta sea la correcta
 
 export default function LogoutButton() {
-  
   const handleLogout = () => {
     // Eliminar el JWT del localStorage
     localStorage.removeItem("JWT");
@@ -11,8 +11,6 @@ export default function LogoutButton() {
   };
 
   return (
-    <Button onClick={handleLogout} className="bg-red-500 hover:bg-red-600">
-      Cerrar Sesión
-    </Button>
+    <Logout onClick={handleLogout} /> // Usa tu componente Logout
   );
 }

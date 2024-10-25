@@ -21,42 +21,47 @@ interface Mensaje {
 export default function LeftSheet() {
   const [historial, setHistorial] = useState<Mensaje[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false); // Estado para controlar si el Sheet está abierto
 
-  useEffect(() => {
-    const fetchHistorial = async () => {
-      const token = localStorage.getItem("JWT");
-      
-      try {
-        const response = await fetch("http://127.0.0.1:5000/historial", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  // Función para cargar el historial
+  const fetchHistorial = async () => {
+    const token = localStorage.getItem("JWT");
+    
+    try {
+      const response = await fetch("http://127.0.0.1:5000/historial", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.Error || "Error al obtener el historial");
-        }
-
-        const data = await response.json();
-        setHistorial(data.Respuesta);
-      } catch (err) {
-        console.error("Error en la solicitud:", err);
-        setError((err as Error).message);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.Error || "Error al obtener el historial");
       }
-    };
 
-    fetchHistorial();
-  }, []);
+      const data = await response.json();
+      setHistorial(data.Respuesta);
+    } catch (err) {
+      console.error("Error en la solicitud:", err);
+      setError((err as Error).message);
+    }
+  };
+
+  // useEffect para cargar historial al abrir el Sheet
+  useEffect(() => {
+    if (isOpen) {
+      fetchHistorial();
+    }
+  }, [isOpen]); // Ejecuta cuando isOpen cambia
 
   const truncateText = (text: string, length: number) => {
     return text.length > length ? `${text.substring(0, length)}...` : text;
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}> {/* Agrega el control del estado isOpen */}
       <SheetTrigger>{"<<"}</SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
@@ -68,7 +73,7 @@ export default function LeftSheet() {
         
         {error && <p className="text-red-500">{error}</p>}
         
-        <div className="mt-4 min-h-[200px] max-h-[80vh] overflow-y-auto"> {/* Establece una altura mínima y máxima */}
+        <div className="mt-4 min-h-[200px] max-h-[80vh] overflow-y-auto">
           {historial.length > 0 ? (
             <ul>
               {historial.map((mensaje) => (
