@@ -6,6 +6,7 @@ import Respuestas from "@/components/ui/Respuestas";
 import Cerrar from "@/components/ui/cerrar";
 import File from "@/components/ui/files";
 import Home from "./registerCard"; // Tu componente de inicio de sesión
+import AvatarCard from "./AvatarCard"; // Nuevo componente para la tarjeta con el avatar
 import Spinner from "./spinner"; // Asegúrate de que la ruta sea correcta
 import { ToastContainer } from "react-toastify"; // Importa ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Importa los estilos de react-toastify
@@ -14,6 +15,7 @@ export default function Page() {
   const [showHome, setShowHome] = useState(true); // Controla si se muestra la pantalla de inicio
   const [response, setResponse] = useState(null); // Estado para almacenar la respuesta
   const [loading, setLoading] = useState(true); // Estado de carga
+  const [showAvatarCard, setShowAvatarCard] = useState(false); // Controla si se muestra la tarjeta del avatar
 
   const handleResponse = (data) => {
     setResponse(data); // Lógica para manejar la respuesta (puedes personalizarla)
@@ -43,6 +45,13 @@ export default function Page() {
             </div>
           )}
 
+          {/* Tarjeta del Avatar */}
+          {showAvatarCard && (
+            <div className="fixed inset-0 z-20 flex justify-center items-center bg-black bg-opacity-80 backdrop-blur-sm">
+              <AvatarCard onClose={() => setShowAvatarCard(false)} />
+            </div>
+          )}
+
           {/* Contenedor principal con desenfoque si Home está visible */}
           <div className={`flex flex-row flex-grow transition-all duration-300 ${showHome ? "blur-sm" : ""}`}>
             <div className="flex-shrink-0">
@@ -63,7 +72,17 @@ export default function Page() {
             <Cerrar />
             <File />
           </div>
-          
+
+          {/* Botón para mostrar la tarjeta del avatar */}
+          <div className={`flex justify-center mt-4 ${!showHome && "block"}`}>
+            <button
+              onClick={() => setShowAvatarCard(true)} // Muestra la tarjeta del avatar
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Mostrar Avatar
+            </button>
+          </div>
+
           {/* Agrega el ToastContainer aquí */}
           <ToastContainer
             position="top-right"
