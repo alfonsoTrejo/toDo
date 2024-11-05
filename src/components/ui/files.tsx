@@ -7,8 +7,40 @@ const Button = () => {
     if (file) {
       // Verifica que el archivo sea un PDF
       if (file.type === "application/pdf") {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        
+        reader.onload = () => {
+          const base64 = reader.result.split(",")[1]; // Obtiene la cadena base64 sin el prefijo
+          console.log(`Archivo PDF en base64: ${base64}`);
+
+          // Realiza una solicitud POST al endpoint con el archivo en base64
+          fetch("http://127.0.0.1:5000/file", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ file: base64, filename: file.name }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error en la solicitud");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Respuesta del servidor:", data);
+            })
+            .catch((error) => {
+              console.error("Error al enviar el archivo:", error);
+            });
+        };
+
+        reader.onerror = (error) => {
+          console.error("Error al leer el archivo:", error);
+        };
+
         console.log(`Archivo PDF seleccionado: ${file.name}`);
-        // Aquí puedes agregar la lógica para manejar el archivo (subir, mostrar, etc.)
       } else {
         alert("Por favor, selecciona un archivo en formato PDF."); // Notificación si no es PDF
       }
