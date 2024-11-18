@@ -77,7 +77,7 @@ const Button = () => {
             d="M17 15V18M17 21V18M17 18H14M17 18H20"
           />
         </svg>
-        ADD FILE
+        Agrega un archivo pdf
       </button>
       <input
         id="file-upload"

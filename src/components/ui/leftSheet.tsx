@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -18,15 +18,18 @@ interface Mensaje {
   message_time: string;
 }
 
-export default function LeftSheet() {
+interface LeftSheetProps {
+  onSelectMessage: (mensaje: Mensaje) => void;
+}
+
+export default function LeftSheet({ onSelectMessage }: LeftSheetProps) {
   const [historial, setHistorial] = useState<Mensaje[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false); // Estado para controlar si el Sheet está abierto
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Función para cargar el historial
   const fetchHistorial = async () => {
     const token = localStorage.getItem("JWT");
-    
+
     try {
       const response = await fetch("http://127.0.0.1:5000/historial", {
         method: "GET",
@@ -49,19 +52,17 @@ export default function LeftSheet() {
     }
   };
 
-  // useEffect para cargar historial al abrir el Sheet
   useEffect(() => {
     if (isOpen) {
       fetchHistorial();
     }
-  }, [isOpen]); // Ejecuta cuando isOpen cambia
+  }, [isOpen]);
 
-  const truncateText = (text: string, length: number) => {
-    return text.length > length ? `${text.substring(0, length)}...` : text;
-  };
+  const truncateText = (text: string, length: number) =>
+    text.length > length ? `${text.substring(0, length)}...` : text;
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}> {/* Agrega el control del estado isOpen */}
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger>{"<<"}</SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
@@ -70,22 +71,25 @@ export default function LeftSheet() {
             Aquí puedes ver el historial de tus ensayos generados.
           </SheetDescription>
         </SheetHeader>
-        
+
         {error && <p className="text-red-500">{error}</p>}
-        
+
         <div className="mt-4 min-h-[200px] max-h-[80vh] overflow-y-auto">
           {historial.length > 0 ? (
             <ul>
               {historial.map((mensaje) => (
                 <li key={mensaje.id} className="mb-2">
-                  <p className="text-sm"><strong>Texto:</strong> {truncateText(mensaje.message_text, 50)}</p>
-                  {mensaje.audio_link && (
-                    <audio controls className="w-full">
-                      <source src={mensaje.audio_link} type="audio/mpeg" />
-                      El navegador no soporta este audio.
-                    </audio>
-                  )}
-                  <p className="text-xs"><small>Tiempo: {mensaje.message_time}</small></p>
+                  <button
+                    className="w-full text-left bg-gray-100 hover:bg-gray-200 p-2 rounded"
+                    onClick={() => onSelectMessage(mensaje)}
+                  >
+                    <p className="text-sm">
+                      <strong>Texto:</strong> {truncateText(mensaje.message_text, 50)}
+                    </p>
+                    <p className="text-xs">
+                      <small>Tiempo: {mensaje.message_time}</small>
+                    </p>
+                  </button>
                 </li>
               ))}
             </ul>

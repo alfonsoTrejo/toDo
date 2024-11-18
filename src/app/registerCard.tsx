@@ -57,16 +57,15 @@ export default function Home({ onButtonClick }) {
 
   const handleRegister = async () => {
     console.log("Email:", email, "Password:", password);
-    setLoading(true); // Inicia la carga
+    setLoading(true); 
     try {
       const response = await fetch(`http://127.0.0.1:5000/auth/singUp`, {
-        // Asegúrate que el endpoint es correcto
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username, // Asegúrate de enviar el nombre de usuario si es necesario
+          username, 
           email,
           password,
         }),

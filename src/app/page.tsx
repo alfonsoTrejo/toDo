@@ -1,89 +1,92 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import LeftSheet from "@/components/ui/leftSheet";
-import MidArea from "@/components/ui/midArea";
 import Respuestas from "@/components/ui/Respuestas";
+import Spinner from "./spinner";
+import Home from "./registerCard";
+import AvatarCard from "./AvatarCard";
+import MidArea from "@/components/ui/midArea";
 import Cerrar from "@/components/ui/cerrar";
 import File from "@/components/ui/files";
-import Home from "./registerCard"; // Tu componente de inicio de sesión
-import AvatarCard from "./AvatarCard"; // Nuevo componente para la tarjeta con el avatar
-import Spinner from "./spinner"; // Asegúrate de que la ruta sea correcta
-import { ToastContainer } from "react-toastify"; // Importa ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // Importa los estilos de react-toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+interface ResponseData {
+  Respuesta_Geminai: string;
+  Audio_URL: string | null;
+}
 
 export default function Page() {
-  const [showHome, setShowHome] = useState(true); // Controla si se muestra la pantalla de inicio
-  const [response, setResponse] = useState(null); // Estado para almacenar la respuesta
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [showAvatarCard, setShowAvatarCard] = useState(false); // Controla si se muestra la tarjeta del avatar
+  const [showHome, setShowHome] = useState(true);
+  const [response, setResponse] = useState<ResponseData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showAvatarCard, setShowAvatarCard] = useState(false);
 
-  const handleResponse = (data) => {
-    setResponse(data); // Lógica para manejar la respuesta (puedes personalizarla)
+  const handleSelectMessage = (mensaje: Mensaje) => {
+    setResponse({
+      Respuesta_Geminai: mensaje.message_text,
+      Audio_URL: mensaje.audio_link || null,
+    });
   };
 
   useEffect(() => {
-    const jwt = localStorage.getItem("JWT"); // Cambia "jwtToken" al nombre de tu clave
+    const jwt = localStorage.getItem("JWT");
     if (jwt) {
-      setShowHome(false); // Si el JWT está presente, oculta la pantalla de inicio
+      setShowHome(false);
     }
-    setLoading(false); // Finaliza la carga después de verificar el JWT
-  }, []); // Solo se ejecuta una vez al montar el componente
+    setLoading(false);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 p-3">
-      {/* Mostrar spinner mientras se verifica el JWT */}
       {loading ? (
         <div className="fixed inset-0 z-20 flex justify-center items-center bg-black bg-opacity-80">
           <Spinner />
         </div>
       ) : (
         <>
-          {/* Mostrar Home si showHome es true */}
           {showHome && (
             <div className="fixed inset-0 z-10 flex justify-center items-center bg-black bg-opacity-80 backdrop-blur-sm transition-opacity duration-300">
-              <Home onButtonClick={() => setShowHome(false)} /> {/* Pasar setShowHome */}
+              <Home onButtonClick={() => setShowHome(false)} />
             </div>
           )}
 
-          {/* Tarjeta del Avatar */}
-          {showAvatarCard && (
-            <div className="fixed inset-0 z-20 flex justify-center items-center bg-black bg-opacity-80 backdrop-blur-sm">
-              <AvatarCard onClose={() => setShowAvatarCard(false)} />
-            </div>
-          )}
-
-          {/* Contenedor principal con desenfoque si Home está visible */}
           <div className={`flex flex-row flex-grow transition-all duration-300 ${showHome ? "blur-sm" : ""}`}>
             <div className="flex-shrink-0">
-              <LeftSheet />
+              <LeftSheet onSelectMessage={handleSelectMessage} />
             </div>
             <div className="flex w-full ml-6 p-1">
               <Respuestas response={response} />
             </div>
           </div>
 
-          {/* Mostrar MidArea solo si Home no está visible */}
           <div className={`flex flex-row w-full mt-auto p-3 ${showHome ? "hidden" : "block"}`}>
-            <MidArea onResponse={handleResponse} />
+            <MidArea onResponse={setResponse} />
           </div>
 
-          {/* Sección para Cerrar y File, usando justify-between */}
           <div className={`flex flex-row w-full mt-auto p-3 justify-between ${showHome ? "hidden" : "flex"}`}>
             <Cerrar />
             <File />
           </div>
 
-          {/* Botón para mostrar la tarjeta del avatar */}
-          <div className={`flex justify-center mt-4 ${!showHome && "block"}`}>
-            <button
-              onClick={() => setShowAvatarCard(true)} // Muestra la tarjeta del avatar
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Mostrar Avatar
-            </button>
-          </div>
+          {!showHome && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setShowAvatarCard(true)}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Mostrar Avatar
+              </button>
+            </div>
+          )}
 
-          {/* Agrega el ToastContainer aquí */}
+          {showAvatarCard && (
+            <div className="fixed inset-0 z-20 flex justify-center items-center bg-black bg-opacity-80">
+              <AvatarCard onClose={() => setShowAvatarCard(false)} />
+            </div>
+          )}
+
           <ToastContainer
             position="top-right"
             autoClose={5000}
