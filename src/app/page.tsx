@@ -34,10 +34,38 @@ export default function Page() {
 
   useEffect(() => {
     const jwt = localStorage.getItem("JWT");
-    if (jwt) {
-      setShowHome(false);
+
+    if (!jwt) {
+      console.log("No se encontró el token JWT en localStorage.");
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
+
+    const verificarToken = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/auth/verificar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+
+        if (response.status === 200) {
+          const data = await response.json();
+          console.log(data);
+          setShowHome(false); // Usuario verificado, ocultar algo si es necesario
+        } else {
+          console.log("Error al verificar el token:", await response.json());
+        }
+      } catch (error) {
+        console.error("Error al realizar la solicitud:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    verificarToken();
   }, []);
 
   const handleSelectMessage = (mensaje: Mensaje) => {
