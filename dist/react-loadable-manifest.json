@@ -6,5 +6,47 @@
   "..\\node_modules\\@react-three\\drei\\web\\FaceLandmarker.js -> @mediapipe/tasks-vision": {
     "id": "..\\node_modules\\@react-three\\drei\\web\\FaceLandmarker.js -> @mediapipe/tasks-vision",
     "files": []
+  },
+  "app\\page.tsx -> ./registerCard": {
+    "id": "app\\page.tsx -> ./registerCard",
+    "files": [
+      "static/chunks/_app-pages-browser_src_app_registerCard_tsx.js"
+    ]
+  },
+  "app\\page.tsx -> @/components/ui/Respuestas": {
+    "id": "app\\page.tsx -> @/components/ui/Respuestas",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_ui_Respuestas_tsx.js"
+    ]
+  },
+  "app\\page.tsx -> @/components/ui/avatar": {
+    "id": "app\\page.tsx -> @/components/ui/avatar",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_ui_avatar_tsx.js"
+    ]
+  },
+  "app\\page.tsx -> @/components/ui/cerrar": {
+    "id": "app\\page.tsx -> @/components/ui/cerrar",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_ui_cerrar_tsx.js"
+    ]
+  },
+  "app\\page.tsx -> @/components/ui/files": {
+    "id": "app\\page.tsx -> @/components/ui/files",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_ui_files_tsx.js"
+    ]
+  },
+  "app\\page.tsx -> @/components/ui/leftSheet": {
+    "id": "app\\page.tsx -> @/components/ui/leftSheet",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_ui_leftSheet_tsx.js"
+    ]
+  },
+  "app\\page.tsx -> @/components/ui/midArea": {
+    "id": "app\\page.tsx -> @/components/ui/midArea",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_ui_midArea_tsx.js"
+    ]
   }
 }

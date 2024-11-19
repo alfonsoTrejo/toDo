@@ -8,7 +8,12 @@ import Spinner from "@/app/spinner"
 import { useDropzone } from 'react-dropzone'
 import { X } from 'lucide-react'
 
-export default function Component({ onResponse }: { onResponse: (data: any) => void }) {
+interface MidAreaProps {
+  onResponse: (data: any) => void;
+  onSendEssay: (essay: string) => void;
+}
+
+export default function MidArea({ onResponse, onSendEssay }: MidAreaProps) {
   const [text, setText] = useState("")
   const [loading, setLoading] = useState(false)
   const [pdfFile, setPdfFile] = useState<File | null>(null)
@@ -37,6 +42,7 @@ export default function Component({ onResponse }: { onResponse: (data: any) => v
   const handleClick = async () => {
     const JWT = localStorage.getItem("JWT")
     setLoading(true)
+    onSendEssay(text || pdfFile?.name || ''); // Iniciar la animación del avatar
 
     try {
       let body: any
@@ -46,28 +52,20 @@ export default function Component({ onResponse }: { onResponse: (data: any) => v
       let endpoint: string
 
       if (pdfFile) {
-        // Endpoint para PDF
         endpoint = `http://127.0.0.1:5000/file`
-
-        // Leer el contenido del PDF como base64
         const reader = new FileReader()
         const base64Content = await new Promise<string>((resolve, reject) => {
           reader.onload = () => resolve(reader.result as string)
           reader.onerror = reject
           reader.readAsDataURL(pdfFile)
         })
-
-        // Crear el cuerpo con el contenido del PDF en base64
         body = JSON.stringify({
-          file: base64Content.split(',')[1], // Remover el prefijo "data:application/pdf;base64,"
+          file: base64Content.split(',')[1],
           filename: pdfFile.name,
         })
         headers['Content-Type'] = 'application/json'
       } else {
-        // Endpoint para texto
         endpoint = `http://127.0.0.1:5000/texto`
-
-        // Enviar el texto plano
         body = JSON.stringify({ text })
         headers['Content-Type'] = 'application/json'
       }
@@ -81,9 +79,7 @@ export default function Component({ onResponse }: { onResponse: (data: any) => v
       if (response.ok) {
         const responseData = await response.json()
         console.log("Datos enviados exitosamente", responseData)
-        if (onResponse) {
-          onResponse(responseData)
-        }
+        onResponse(responseData)
         toast.success(pdfFile ? "PDF enviado con éxito" : "Ensayo enviado con éxito")
       } else {
         const errorMessage = await response.text()
