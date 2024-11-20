@@ -222,7 +222,6 @@ export default function Home({ onButtonClick }) {
                         placeholder="Nombre de usuario"
                       />
                     </div>
-
                     <div className="flex flex-col space-y-1.5">
                       <Label>Tipo de usuario</Label>
                       <div className="flex items-center space-x-4">

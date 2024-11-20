@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "react-toastify"
@@ -17,6 +17,7 @@ export default function MidArea({ onResponse, onSendEssay }: MidAreaProps) {
   const [text, setText] = useState("")
   const [loading, setLoading] = useState(false)
   const [pdfFile, setPdfFile] = useState<File | null>(null)
+  const [isSent, setIsSent] = useState(false)
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -42,6 +43,7 @@ export default function MidArea({ onResponse, onSendEssay }: MidAreaProps) {
   const handleClick = async () => {
     const JWT = localStorage.getItem("JWT")
     setLoading(true)
+    setIsSent(true)
     onSendEssay(text || pdfFile?.name || ''); // Iniciar la animación del avatar
 
     try {
@@ -98,6 +100,7 @@ export default function MidArea({ onResponse, onSendEssay }: MidAreaProps) {
       setLoading(false)
       setText("")
       setPdfFile(null)
+      // isSent remains true until a new response is received
     }
   }
 
@@ -105,6 +108,10 @@ export default function MidArea({ onResponse, onSendEssay }: MidAreaProps) {
     setPdfFile(null)
     toast.info("Archivo PDF removido")
   }
+
+  useEffect(() => {
+    setIsSent(false)
+  }, [onResponse])
 
   return (
     <div className="grid w-full h-[calc(100%-70px)] gap-7">
@@ -120,7 +127,7 @@ export default function MidArea({ onResponse, onSendEssay }: MidAreaProps) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           className="min-h-[100px] max-h-[100px] resize-none"
-          disabled={!!pdfFile}
+          disabled={!!pdfFile || isSent || loading}
         />
         {pdfFile && (
           <div className="mt-2 flex items-center justify-between">
@@ -135,6 +142,7 @@ export default function MidArea({ onResponse, onSendEssay }: MidAreaProps) {
                 removePdf()
               }}
               aria-label="Remover PDF"
+              disabled={isSent || loading}
             >
               <X className="h-4 w-4" />
             </Button>
@@ -146,15 +154,14 @@ export default function MidArea({ onResponse, onSendEssay }: MidAreaProps) {
           <Spinner />
         ) : (
           <>
-            <Button onClick={handleClick} disabled={loading || (!text && !pdfFile)}>
+            <Button onClick={handleClick} disabled={loading || (!text && !pdfFile) || isSent}>
               Enviar {pdfFile ? 'PDF' : 'ensayo'}
             </Button>
-            <Button onClick={open} variant="outline" disabled={loading || !!pdfFile}>
+            <Button onClick={open} variant="outline" disabled={loading || !!pdfFile || isSent}>
               Seleccionar PDF
             </Button>
           </>
         )}
       </div>
     </div>
-  )
-}
+  )}

@@ -77,7 +77,6 @@ export default function Page() {
 
   const handleSendEssay = (essay: string) => {
     setIsAnimating(true);
-    setIsLoading(true);
     setIsMinimized(true);
     avatarRef.current?.startAnimation();
   };
@@ -85,7 +84,6 @@ export default function Page() {
   const handleResponse = (responseData: ResponseData) => {
     setResponse(responseData);
     setIsAnimating(false);
-    setIsLoading(false);
     avatarRef.current?.stopAnimation();
   };
 
